@@ -18,7 +18,6 @@ jobs:
           do
             # ファイル名を出力
             echo "File changed: $file"
-            
             # ディレクトリを取得し、対応するspecファイルがあるか確認
             dir=$(dirname $file)
             spec_file="$dir/*spec*"
