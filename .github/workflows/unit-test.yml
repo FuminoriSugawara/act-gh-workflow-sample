@@ -14,16 +14,18 @@ jobs:
 
       - name: Find and Run Tests
         run: |
+          declare -A dir_tested=()
           for file in ${{ steps.changed-files.outputs.all_changed_files }}
           do
-            # ファイル名を出力
-            echo "File changed: $file"
-            # ディレクトリを取得し、対応するspecファイルがあるか確認
+            # Get the directory and check if there is a corresponding spec file
             dir=$(dirname $file)
-            spec_file="$dir/*spec*"
-            if [ -f $spec_file ]; then
-              # specファイルが存在する場合、テストを実行
-              echo "Running tests for $spec_file"
-              npx jest $spec_file
+            if [[ ! ${dir_tested[$dir]} ]]; then
+              spec_file="$dir/*spec*"
+              if [ -f $spec_file ]; then
+                # If a spec file exists, run the test
+                echo "Running tests for $spec_file"
+                npx jest $spec_file
+                dir_tested[$dir]=true
+              fi
             fi
           done
